@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: #fff;
+            text-align: center;
+        }
+
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            animation: fadeIn 1s ease-out;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        input:focus {
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-5px);
+        }
+
+        #editButton, #addButton, #deleteButton, #backButton {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #FF6347;
+        }
+
+        #backButton {
+            background-color: #ffa500;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #searchContainer {
+            margin: 20px 0;
+        }
+
+        #searchInput {
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #searchIcon {
+            cursor: pointer;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="parentLogin" class="container">
+        <h2>تسجيل الدخول لأولياء الأمور</h2>
+        <input type="text" id="parentUsername" placeholder="اسم المستخدم">
+        <input type="password" id="parentPassword" placeholder="كلمة المرور">
+        <input type="text" id="parentName" placeholder="الاسم الشخصي">
+        <button onclick="parentLogin()">تسجيل الدخول</button>
+    </div>
+
+    <div id="teacherLogin" class="container">
+        <h2>تسجيل الدخول للأساتذة</h2>
+        <input type="text" id="teacherUsername" placeholder="الاسم الشخصي">
+        <input type="password" id="teacherPassword" placeholder="كلمة المرور">
+        <button onclick="teacherLogin()">تسجيل الدخول</button>
+    </div>
+
+    <div id="tablePage" class="container hidden">
+        <h2>جدول التقدير</h2>
+
+        <!-- حاوية البحث -->
+        <div id="searchContainer">
+            <input type="text" id="searchInput" placeholder="ابحث عن اسم الطالب..." onkeyup="searchTable()">
+            <span id="searchIcon" onclick="searchTable()">🔍</span>
+            <div id="error-message" class="error-message hidden"></div>
+        </div>
+
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>اسم الطالب</th>
+                    <th>اسم السورة</th>
+                    <th>عدد الآيات</th>
+                    <th>تقدير الحفظ</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- سيتم إضافة البيانات هنا -->
+            </tbody>
+        </table>
+        <button id="editButton" onclick="editTable()">تعديل الصف الحالي</button>
+        <button id="addButton" onclick="addRow()">إضافة صف جديد</button>
+        <button id="deleteButton" onclick="deleteRow()">حذف الصف</button>
+        <button id="backButton" onclick="goBack()">رجوع</button>
+    </div>
+    
+    <script>
+        // التحقق من البروتوكول HTTPS
+        if (location.protocol !== 'https:') {
+            location.replace(`https://${location.hostname}${location.pathname}${location.search}`);
+        }
+    </script>
+    <script>
+        // البحث في الجدول بناءً على اسم الطالب
+        function searchTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.getElementById('resultTable');
+            const tr = table.getElementsByTagName('tr');
+            let found = false; // متغير لتتبع ما إذا تم العثور على الطالب
+
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td')[0]; // العمود الأول "اسم الطالب"
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(searchInput) > -1) {
+                        tr[i].style.display = '';
+                        found = true; // تم العثور على الطالب
+                        tr[i].scrollIntoView({ behavior: 'smooth' }); // توجيه المستخدم إلى الصف
+                    } else {
+                        tr[i].style.display = 'none';
+                    }
+                }
+            }
+
+            // إظهار رسالة خطأ إذا لم يتم العثور على الطالب
+            const errorMessage = document.getElementById('error-message');
+            if (!found) {
+                errorMessage.textContent = 'لم يُحفظ أي طالب بهذا الاسم.';
+                errorMessage.classList.remove('hidden');
+            } else {
+                errorMessage.classList.add('hidden'); // إخفاء الرسالة إذا تم العثور على الطالب
+            }
+        }
+
+        function saveData(data) {
+            localStorage.setItem('tableData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const tableData = localStorage.getItem('tableData');
+            return tableData ? JSON.parse(tableData) : [];
+        }
+
+        function updateTablefunction updateTable() {
+            const tableBody = document.getElementById('tableBody');
+            const data = loadData();
+            tableBody.innerHTML = '';
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${row.student}</td><td>${row.sura}</td><td>${row.ayat}</td><td>${row.grade}</td>`;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function parentLogin() {
+            const username = document.getElementById('parentUsername').value;
+            const password = document.getElementById('parentPassword').value;
+            const name = document.getElementById('parentName').value;
+
+            if (username && password && name) {
+                document.getElementById('parentLogin').classList.add('hidden');
+                document.getElementById('teacherLogin').classList.add('hidden');
+                document.getElementById('tablePage').classList.remove('hidden');
+                document.getElementById('backButton').style.display = 'inline-block';
+                updateTable();
+            } else {
+                alert('يرجى إدخال جميع الحقول.');
+            }
+        }
+
+        function teacherLogin() {
+            const username = document.getElementById('teacherUsername').value;
+            const password = document.getElementById('teacherPassword').value;
+
+            if (username === 'teacher' && password === '12345') {
+                document.getElementById('parentLogin').classList.add('hidden');
+                document.getElementById('teacherLogin').classList.add('hidden');
+                document.getElementById('tablePage').classList.remove('hidden');
+                document.getElementById('editButton').style.display = 'inline-block';
+                document.getElementById('addButton').style.display = 'inline-block';
+                document.getElementById('deleteButton').style.display = 'inline-block';
+                document.getElementById('backButton').style.display = 'inline-block';
+                updateTable();
+            } else {
+                alert('بيانات الدخول غير صحيحة.');
+            }
+        }
+
+        function editTable() {
+            const data = loadData();
+            const index = prompt('أدخل رقم الصف لتعديله (1 للصف الأول):');
+            if (index && index > 0 && index <= data.length) {
+                const row = data[index - 1];
+                row.student = prompt('اسم الطالب:', row.student);
+                row.sura = prompt('اسم السورة:', row.sura);
+                row.ayat = prompt('عدد الآيات:', row.ayat);
+                row.grade = prompt('تقدير الحفظ:', row.grade); // إضافة هذا السطر
+                saveData(data);
+                updateTable();
+            } else {
+                alert('رقم الصف غير صحيح.');
+            }
+        }
+
+        function addRow() {
+            const data = loadData();
+            const newRow = {
+                student: prompt('اسم الطالب:'),
+                sura: prompt('اسم السورة:'),
+                ayat: prompt('عدد الآيات:'),
+                grade: prompt('تقدير الحفظ:')
+            };
+            if (newRow.student && newRow.sura && newRow.ayat && newRow.grade) {
+                data.push(newRow);
+                saveData(data);
+                updateTable();
+            } else {
+                alert('يرجى إدخال جميع الحقول.');
+            }
+        }
+
+        function deleteRow() {
+            const data = loadData();
+            const index = prompt('أدخل رقم الصف لحذفه (1 للصف الأول):');
+            if (index && index > 0 && index <= data.length) {
+                data.splice(index - 1, 1);
+                saveData(data);
+                updateTable();
+            } else {
+                alert('رقم الصف غير صحيح.');
+            }
+        }
+
+        function goBack() {
+            document.getElementById('tablePage').classList.add('hidden');
+            document.getElementById('parentLogin').classList.remove('hidden');
+            document.getElementById('teacherLogin').classList.remove('hidden');
+            document.getElementById('editButton').style.display = 'none';
+            document.getElementById('addButton').style.display = 'none';
+            document.getElementById('deleteButton').style.display = 'none';
+            document.getElementById('backButton').style.display = 'none';
+        }
+
+        // تحميل البيانات عند بدء الصفحة
+        document.addEventListener('DOMContentLoaded', updateTable);
+    </script>
+</body>
+</html>
