@@ -208,7 +208,7 @@
             return tableData ? JSON.parse(tableData) : [];
         }
 
-        function updateTablefunction updateTable() {
+        function updateTable() {
             const tableBody = document.getElementById('tableBody');
             const data = loadData();
             tableBody.innerHTML = '';
@@ -236,7 +236,7 @@
         }
 
         function teacherLogin() {
-            const username = document.getElementById('teacherUsername').value;
+            const username = document.getElementByconst username = document.getElementById('teacherUsername').value;
             const password = document.getElementById('teacherPassword').value;
 
             if (username === 'teacher' && password === '12345') {
@@ -261,7 +261,7 @@
                 row.student = prompt('اسم الطالب:', row.student);
                 row.sura = prompt('اسم السورة:', row.sura);
                 row.ayat = prompt('عدد الآيات:', row.ayat);
-                row.grade = prompt('تقدير الحفظ:', row.grade); // إضافة هذا السطر
+                row.grade = prompt('تقدير الحفظ:', row.grade);
                 saveData(data);
                 updateTable();
             } else {
