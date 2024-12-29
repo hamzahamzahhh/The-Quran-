@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>   النجاح مسار </title>
+    <title>النجاح مسار</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,55 +39,48 @@
     </div>
 
     <script>
-        // التحقق من إدخال الاسم
+        // تحميل التعليقات من Local Storage
         document.addEventListener("DOMContentLoaded", () => {
-            const userName = localStorage.getItem("!userName");
-
-            // إذا لم يتم إدخال الاسم، يتم إعادة التوجيه إلى صفحة إدخال الاسم
+            const userName = localStorage.getItem("userName");
             if (userName) {
-                window.location.href = "الصفحة1.html";
-            } else {
-                // عرض الاسم في رسالة الترحيب
                 const welcomeMessage = document.getElementById("welcome-message");
                 welcomeMessage.textContent = `مرحباً، ${userName}!`;
             }
+
+            // استرجاع وعرض التعليقات
+            const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+            const commentsContainer = document.getElementById("comments-container");
+            savedComments.forEach(({ name, comment }) => {
+                const commentDiv = document.createElement("div");
+                commentDiv.className = "comment";
+
+                const iconDiv = document.createElement("div");
+                iconDiv.className = "icon";
+                iconDiv.textContent = "👤";
+
+                const textDiv = document.createElement("div");
+                textDiv.className = "text";
+                textDiv.textContent = `${name}: ${comment}`;
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.textContent = "حذف";
+                deleteBtn.onclick = () => {
+                    deleteComment(name, comment);
+                };
+
+                commentDiv.appendChild(iconDiv);
+                commentDiv.appendChild(textDiv);
+                commentDiv.appendChild(deleteBtn);
+                commentsContainer.appendChild(commentDiv);
+            });
         });
-
-        // إظهار نموذج تعديل الاسم
-        function showEditNameForm() {
-            document.getElementById("edit-name-section").style.display = "block";
-        }
-
-        // إخفاء نموذج تعديل الاسم
-        function hideEditNameForm() {
-            document.getElementById("edit-name-section").style.display = "none";
-        }
-
-        // تحديث الاسم
-        function updateName() {
-            const newName = document.getElementById("new-name").value.trim();
-            if (newName === "") {
-                alert("الرجاء إدخال اسم جديد!");
-                return;
-            }
-
-            // تحديث الاسم في Local Storage
-            localStorage.setItem("userName", newName);
-
-            // تحديث رسالة الترحيب
-            const welcomeMessage = document.getElementById("welcome-message");
-            welcomeMessage.textContent = `مرحباً، ${newName}!`;
-
-            // إخفاء نموذج تعديل الاسم
-            hideEditNameForm();
-
-            // تنظيف حقل الإدخال
-            document.getElementById("new-name").value = "";
-        }
 
         // إضافة تعليق جديد
         function addTestimonial() {
             const commentText = document.getElementById("new-comment").value.trim();
+            const userName = localStorage.getItem("userName") || "مجهول";
+
             if (commentText === "") {
                 alert("الرجاء كتابة تعليق!");
                 return;
@@ -105,13 +98,13 @@
 
             const textDiv = document.createElement("div");
             textDiv.className = "text";
-            textDiv.textContent = commentText;
+            textDiv.textContent = `${userName}: ${commentText}`;
 
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "delete-btn";
             deleteBtn.textContent = "حذف";
             deleteBtn.onclick = () => {
-                commentsContainer.removeChild(commentDiv);
+                deleteComment(userName, commentText);
             };
 
             commentDiv.appendChild(iconDiv);
@@ -119,10 +112,55 @@
             commentDiv.appendChild(deleteBtn);
             commentsContainer.appendChild(commentDiv);
 
+            // حفظ التعليق في Local Storage
+            saveComment(userName, commentText);
+
             // تفريغ النص
             document.getElementById("new-comment").value = "";
         }
+
+        // حفظ التعليق في Local Storage
+        function saveComment(name, comment) {
+            const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+            savedComments.push({ name, comment });
+            localStorage.setItem("comments", JSON.stringify(savedComments));
+        }
+
+        // حذف التعليق من Local Storage والعرض
+        function deleteComment(name, comment) {
+            let savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+            savedComments = savedComments.filter(
+                (c) => c.name !== name || c.comment !== comment
+            );
+            localStorage.setItem("comments", JSON.stringify(savedComments));
+            location.reload(); // إعادة تحميل الصفحة لتحديث التعليقات
+        }
+
+        // إظهار وإخفاء نموذج تعديل الاسم
+        function showEditNameForm() {
+            document.getElementById("edit-name-section").style.display = "block";
+        }
+
+        function hideEditNameForm() {
+            document.getElementById("edit-name-section").style.display = "none";
+        }
+
+        // تحديث الاسم
+        function updateName() {
+            const newName = document.getElementById("new-name").value.trim();
+            if (newName === "") {
+                alert("الرجاء إدخال اسم جديد!");
+                return;
+            }
+
+            localStorage.setItem("userName", newName);
+
+            const welcomeMessage = document.getElementById("welcome-message");
+            welcomeMessage.textContent = `مرحباً، ${newName}!`;
+
+            hideEditNameForm();
+            document.getElementById("new-name").value = "";
+        }
     </script>
-        
 </body>
 </html>
