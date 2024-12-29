@@ -7,6 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <style>
+  /* النمط النهاري */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    transition: background-color 0.5s, color 0.5s;
+  }
+
+  /* النمط الليلي */
+  body.night-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+    </style>
+    <button id="theme-toggle">تبديل الوضع</button>
     <div id="main-section">
         <header>
             <div class="header-content">
