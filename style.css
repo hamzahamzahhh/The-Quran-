@@ -634,3 +634,25 @@ p{
     font-size: 14px;
   }
 }
+@media (orientation: portrait) {
+  body {
+    background-color: lightcoral;
+  }
+}
+
+@media (orientation: landscape) {
+  body {
+    background-color: lightblue;
+  }
+}
+nav ul {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  nav ul {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
