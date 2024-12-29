@@ -1,9 +1,11 @@
 /* التنسيق العام */
+
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     background: linear-gradient(135deg, #2b2b2b, #3b3b3b);
+    height:100%;
     color: #fff;
     direction: rtl;
     overflow-x: hidden;
