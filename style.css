@@ -624,3 +624,13 @@ p{
     font-size:1.4em;
     font-weight:700;
 }
+@media (max-width: 480px) {
+  h1 {
+    font-size: 10px;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
