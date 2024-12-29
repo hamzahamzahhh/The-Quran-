@@ -23,7 +23,7 @@
     color: #ffffff;
   }
     </style>
-    <button id="theme-toggle">تبديل الوضع</button>
+    <div><button id="theme-toggle">تبديل الوضع</button></div>
     <div id="main-section">
         <header>
             <div class="header-content">
@@ -54,6 +54,26 @@
             </section>
         </main>
     </div>
+    <script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const currentTheme = localStorage.getItem('theme');
+
+  // إذا كان هناك تفضيل مخزن، قم بتطبيقه
+  if (currentTheme === 'night') {
+    document.body.classList.add('night-mode');
+  }
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('night-mode');
+
+    // حفظ التفضيل في Local Storage
+    if (document.body.classList.contains('night-mode')) {
+      localStorage.setItem('theme', 'night');
+    } else {
+      localStorage.setItem('theme', 'day');
+    }
+  });
+    </script>
 
     <script>
         // تحميل التعليقات من Local Storage
