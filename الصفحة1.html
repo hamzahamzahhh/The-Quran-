@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>   النجاح مسار </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-section">
+        <header>
+            <div class="header-content">
+                <a href="index.html">الرئيسية</a>
+                <a href="form.html">الاستمارة</a>
+                <a href="support.html">الدعم</a>
+            </div>
+        </header>
+        <main>
+            <div class="welcome-section">
+                <h1 id="welcome-message">مرحباً!</h1>
+                <button id="edit-name-btn" onclick="showEditNameForm()">تعديل الاسم</button>
+            </div>
+            <div id="edit-name-section" style="display: none;">
+                <input type="text" id="new-name" placeholder="أدخل الاسم الجديد">
+                <button onclick="updateName()">حفظ</button>
+                <button onclick="hideEditNameForm()">إلغاء</button>
+            </div>
+            <section class="comments-section">
+                <h2>التعليقات</h2>
+                <div id="comments-container">
+                    <!-- التعليقات تظهر هنا -->
+                </div>
+                <div class="add-comment">
+                    <textarea id="new-comment" placeholder="اكتب تعليقك هنا..."></textarea>
+                    <button onclick="addTestimonial()">إضافة تعليق</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // التحقق من إدخال الاسم
+        document.addEventListener("DOMContentLoaded", () => {
+            const userName = localStorage.getItem("!userName");
+
+            // إذا لم يتم إدخال الاسم، يتم إعادة التوجيه إلى صفحة إدخال الاسم
+            if (userName) {
+                window.location.href = "الصفحة1.html";
+            } else {
+                // عرض الاسم في رسالة الترحيب
+                const welcomeMessage = document.getElementById("welcome-message");
+                welcomeMessage.textContent = `مرحباً، ${userName}!`;
+            }
+        });
+
+        // إظهار نموذج تعديل الاسم
+        function showEditNameForm() {
+            document.getElementById("edit-name-section").style.display = "block";
+        }
+
+        // إخفاء نموذج تعديل الاسم
+        function hideEditNameForm() {
+            document.getElementById("edit-name-section").style.display = "none";
+        }
+
+        // تحديث الاسم
+        function updateName() {
+            const newName = document.getElementById("new-name").value.trim();
+            if (newName === "") {
+                alert("الرجاء إدخال اسم جديد!");
+                return;
+            }
+
+            // تحديث الاسم في Local Storage
+            localStorage.setItem("userName", newName);
+
+            // تحديث رسالة الترحيب
+            const welcomeMessage = document.getElementById("welcome-message");
+            welcomeMessage.textContent = `مرحباً، ${newName}!`;
+
+            // إخفاء نموذج تعديل الاسم
+            hideEditNameForm();
+
+            // تنظيف حقل الإدخال
+            document.getElementById("new-name").value = "";
+        }
+
+        // إضافة تعليق جديد
+        function addTestimonial() {
+            const commentText = document.getElementById("new-comment").value.trim();
+            if (commentText === "") {
+                alert("الرجاء كتابة تعليق!");
+                return;
+            }
+
+            const commentsContainer = document.getElementById("comments-container");
+
+            // إنشاء تعليق جديد
+            const commentDiv = document.createElement("div");
+            commentDiv.className = "comment";
+
+            const iconDiv = document.createElement("div");
+            iconDiv.className = "icon";
+            iconDiv.textContent = "👤";
+
+            const textDiv = document.createElement("div");
+            textDiv.className = "text";
+            textDiv.textContent = commentText;
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.textContent = "حذف";
+            deleteBtn.onclick = () => {
+                commentsContainer.removeChild(commentDiv);
+            };
+
+            commentDiv.appendChild(iconDiv);
+            commentDiv.appendChild(textDiv);
+            commentDiv.appendChild(deleteBtn);
+            commentsContainer.appendChild(commentDiv);
+
+            // تفريغ النص
+            document.getElementById("new-comment").value = "";
+        }
+    </script>
+        
+</body>
+</html>

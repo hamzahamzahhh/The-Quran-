@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> النجاح مسار</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="الصفحة1.html">الرئيسية</a>
+            <a href="support.html">الدعم</a>
+        </div>
+    </header>
+
+    <section class="form-section">
+        <h1 id="pika">استمارة التسجيل</h1>
+        <form id="registrationForm">
+            <label for="name">الاسم الكامل</label>
+            <input type="text" placeholder="الاسم الكامل" id="name" required>
+
+            <label for="phone">رقم الهاتف</label>
+            <input type="tel" placeholder="رقم الهاتف" id="phone" required>
+
+            <label for="level">المستوى الدراسي</label>
+            <select id="level" required>
+                <option value="1st">أولى باك</option>
+                <option value="2nd">ثانية باك</option>
+            </select>
+
+            <label for="subject">المادة</label>
+            <select id="subject" required>
+                <option value="math">رياضيات</option>
+                <option value="physics">فيزياء</option>
+                <option value="both">معا</option>
+            </select>
+
+            <label for="paymentProof">إثبات الدفع</label>
+            <input type="file" id="paymentProof" required>
+
+            <div id="totalAmount"></div>
+            <button type="submit">إرسال</button>
+        </form>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
