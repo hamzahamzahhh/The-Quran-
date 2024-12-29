@@ -10,10 +10,26 @@ function showMainPage() {
     if (fullName !== "") {
         document.getElementById("intro-section").classList.add("hidden");
         document.getElementById("main-section").classList.remove("hidden");
+
+        // حفظ الاسم في التخزين المحلي
+        localStorage.setItem("userName", fullName);
     } else {
         alert("الرجاء إدخال الاسم الكامل!");
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const userName = localStorage.getItem("userName");
+
+    if (!userName) {
+        // إذا لم يتم إدخال الاسم، يتم إعادة التوجيه إلى صفحة إدخال الاسم
+        window.location.href = "form.html";
+    } else {
+        // عرض الاسم الكامل في رسالة الترحيب
+        const welcomeMessage = document.getElementById("welcome-message");
+        welcomeMessage.textContent = `مرحباً، ${userName}!`;
+    }
+});
 
 // إضافة تعليق جديد
 function addTestimonial() {
@@ -52,6 +68,41 @@ function addTestimonial() {
     // تفريغ النص
     document.getElementById("new-comment").value = "";
 }
+
+// إضافة تعليقات إيجابية مسبقة
+document.addEventListener("DOMContentLoaded", () => {
+    const predefinedComments = [
+        { name: "محمد", comment: "موقع رائع جداً!" },
+        { name: "فاطمة", comment: "أحببت التصميم البسيط!" },
+        { name: "علي", comment: "تجربة استخدام مذهلة!" }
+    ];
+
+    const commentsContainer = document.getElementById("comments-container");
+    predefinedComments.forEach(({ name, comment }) => {
+        const commentDiv = document.createElement("div");
+        commentDiv.className = "comment";
+
+        const iconDiv = document.createElement("div");
+        iconDiv.className = "icon";
+        iconDiv.textContent = "👤";
+
+        const textDiv = document.createElement("div");
+        textDiv.className = "text";
+        textDiv.textContent = `${name}: ${comment}`;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.textContent = "حذف";
+        deleteBtn.onclick = () => {
+            commentsContainer.removeChild(commentDiv);
+        };
+
+        commentDiv.appendChild(iconDiv);
+        commentDiv.appendChild(textDiv);
+        commentDiv.appendChild(deleteBtn);
+        commentsContainer.appendChild(commentDiv);
+    });
+});
 
 // ****** صفحة الاستمارة ******
 
